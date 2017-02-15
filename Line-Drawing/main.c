@@ -2,7 +2,8 @@
 #include<stdlib.h>
 #include"functions.h"
 
-int main()
+int 
+main()
 {
 	lineProgram();
 }
