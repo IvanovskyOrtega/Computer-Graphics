@@ -8,3 +8,4 @@ clean:
 	rm main.o functions.o 
 run: a.out
 	./a.out
+
