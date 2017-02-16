@@ -2,7 +2,7 @@
 #include "functions.h"
 
 int 
-main()
+main(void)
 {
 	void generateFlag();
 	return 0;
