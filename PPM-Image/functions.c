@@ -3,6 +3,8 @@
 
 void generateFlag()
 {
+	int i=0;
+	int j=0;
 	printf("P3\n");
 	printf("1920 1080\n");
 	printf("255\n");
