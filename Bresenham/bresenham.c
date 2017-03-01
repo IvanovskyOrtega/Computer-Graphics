@@ -26,7 +26,7 @@ void bresenham()
     	}
 	/*for( i = 0 ; i<10000 ; i++ )
 	{*/
-	rgb[0]=rand()%256;
+	rgb[0]=rand()%256;//Random color for the line
 	rgb[1]=rand()%256;
 	rgb[2]=rand()%256;
 	getXYValues( Points );
@@ -277,7 +277,7 @@ void putPixel( int x, int y, unsigned char*** Raster, unsigned char* rgb )
 void drawLine( unsigned char*** Raster, int width, int height, int evaluatedSlope )
 {
 	FILE* line;
-	line = fopen("line.ppm","w");
+	line = fopen("line.ppm","w");//Creates the file (if not exists), and overwrite it (if exists)
 	fprintf(line,"P3\n");
 	fprintf(line,"1920 1080\n");
 	fprintf(line,"255\n");
