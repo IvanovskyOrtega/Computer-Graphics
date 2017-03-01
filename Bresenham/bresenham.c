@@ -179,8 +179,8 @@ void fillSpecialCase4( double x0, double y0, double x1, double y1, unsigned char
 {
 	for( int i = x0 ; i <= x1 ; i++ )
 	{
-		putPixel( i , y1 , Raster, rgb );
-		y1--;
+		putPixel( i , y0 , Raster, rgb );
+		y0--;
 	}
 }
 
