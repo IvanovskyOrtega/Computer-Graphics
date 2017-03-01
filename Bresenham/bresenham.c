@@ -98,6 +98,8 @@ void bresenham()
 	//}
 	
 	drawLine( Raster, 1920, 1080 );
+	free(Raster);
+	Raster = NULL;
 }
 
 double* getXYValues( double* Points )
