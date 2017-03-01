@@ -5,5 +5,5 @@
 int
 main(void)
 {
-	bresenham();
+	bresenham();//Functions and methods in bresenham.c
 }
