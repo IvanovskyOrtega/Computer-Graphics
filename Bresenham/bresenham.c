@@ -97,7 +97,7 @@ void bresenham()
 	}
 	//}
 	
-	drawLine( Raster, 1920, 1080, 0 );
+	drawLine( Raster, 1920, 1080 );
 }
 
 double* getXYValues( double* Points )
@@ -274,7 +274,7 @@ void putPixel( int x, int y, unsigned char*** Raster, unsigned char* rgb )
 	Raster[x][y][1]=rgb[1];
 	Raster[x][y][2]=rgb[2];
 }
-void drawLine( unsigned char*** Raster, int width, int height, int evaluatedSlope )
+void drawLine( unsigned char*** Raster, int width, int height )
 {
 	FILE* line;
 	line = fopen("line.ppm","w");//Creates the file (if not exists), and overwrite it (if exists)
