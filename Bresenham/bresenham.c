@@ -94,6 +94,9 @@ void bresenham()
 		{
 			fillSpecialCase4( Points[0], Points[1], Points[2], Points[3], Raster, rgb );	
 		}
+		else{
+			fillRasterBresenham( (int)Points[0], (int)Points[1], (int)Points[2], (int)Points[3], Raster, evaluatedSlope, rgb );
+		}
 	}
 	//}
 	
