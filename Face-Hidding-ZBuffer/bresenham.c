@@ -297,7 +297,7 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
       rgb[1] = /*rand () % 255 */ 255;
       rgb[2] = /*rand () % 255 */ 255;
       backface = faceHidding (faces[i], vertexes, edges);
-      if (backface >= 90 && backface <= 270)
+      if (backface >= 0 && backface <= 180)
 	{
 	  cleanZBuffer (&ZBuffer);
 	  cleanRaster (&Raster);
