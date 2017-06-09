@@ -252,29 +252,29 @@ createRaster ()
 }
 
 void
-cleanRaster (struct pixels ***Raster)
+cleanRaster (struct pixels ****Raster)
 {
   for (int i = 0; i < 1920; i++)
     {
       for (int j = 0; j < 1080; j++)
 	{
-	  Raster[i][j]->rgb[0] = 0;
-	  Raster[i][j]->rgb[1] = 0;
-	  Raster[i][j]->rgb[2] = 0;
-	  Raster[i][j]->zBuffer = -10000;
+	  (*Raster)[i][j]->rgb[0] = 0;
+	  (*Raster)[i][j]->rgb[1] = 0;
+	  (*Raster)[i][j]->rgb[2] = 0;
+	  (*Raster)[i][j]->zBuffer = -10000;
 	}
     }
 }
 
 void
-cleanZBuffer (double **ZBuffer)
+cleanZBuffer (double ***ZBuffer)
 {
   for (int i = 0; i < 1920; i++)
     {
       for (int j = 0; j < 1080; j++)
 	{
-	  ZBuffer[i][j] = -10000;
-	  ZBuffer[i][j] = -10000;
+	  (*ZBuffer)[i][j] = -10000;
+	  (*ZBuffer)[i][j] = -10000;
 	}
     }
 }
@@ -283,7 +283,7 @@ void
 mainBresenham (int n, struct face *faces, struct edge *edges,
 	       struct vertex *vertexes, struct pixels ***Raster, char *name)
 {
-  int i;
+  int i; 
   srand (clock ());
   double backface;
   double **ZBuffer = NULL;
@@ -293,14 +293,14 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
   finalRaster = createRaster ();
   for (i = 0; i < n; i++)
     {
-      rgb[0] = /*rand () % 255*/93;
-      rgb[1] = /*rand () % 255*/247;
-      rgb[2] = /*rand () % 255*/131;
+      rgb[0] = /*rand () % 255*/255;
+      rgb[1] = /*rand () % 255*/255;
+      rgb[2] = /*rand () % 255*/255 ;
       backface = faceHidding (faces[i], vertexes, edges);
       if (backface >= 0 && backface <= 1)
 	{
-	  cleanZBuffer (ZBuffer);
-	  cleanRaster (Raster);
+	  cleanZBuffer (&ZBuffer);
+	  cleanRaster (&Raster);
 	  drawBresenham (faces[i].edge1->vertex1->x,
 			 faces[i].edge1->vertex1->y,
 			 faces[i].edge1->vertex2->x,
@@ -319,13 +319,13 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
 			 faces[i].edge3->vertex2->y,
 			 faces[i].edge3->vertex1->zb,
 			 faces[i].edge3->vertex2->zb, Raster, rgb, ZBuffer);
-	  scanline (Raster, ZBuffer, rand () % 255, rand () % 255,
-		    rand () % 255);
+	  scanline (Raster, ZBuffer, rand () % 255, rand () % 255, rand () % 255);
+	  //scanline (Raster, ZBuffer, rand () % 255, rand () % 255, rand () % 255);
 	  for (int i = 0; i < 1920; i++)
 	    {
 	      for (int j = 0; j < 1080; j++)
 		{
-		  if (Raster[i][j]->zBuffer >= finalRaster[i][j]->zBuffer)
+		  if (ZBuffer[i][j] > finalRaster[i][j]->zBuffer)
 		    {
 		      finalRaster[i][j]->rgb[0] = Raster[i][j]->rgb[0];
 		      finalRaster[i][j]->rgb[1] = Raster[i][j]->rgb[1];
