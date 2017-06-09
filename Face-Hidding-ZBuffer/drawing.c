@@ -68,8 +68,6 @@ scanline (struct pixels ***Raster, double **ZBuffer, int r, int g, int b)
 		      else if (flag == 2)	/* We've achieved the limit */
 			{
 			  break;
-			  /*flag = 1;
-			     x1 = x2;  The firt limit is equal to the previous one */
 			}
 		    }
 		}
