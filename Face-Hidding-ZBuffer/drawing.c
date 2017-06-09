@@ -38,11 +38,11 @@ faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
 void
 scanline (struct pixels ***Raster, double **ZBuffer, int r, int g, int b)
 {
-  int x1, x2, flag = 0;
+  int start, end, limit = 0;
   double zb1, zb2, incZB;
   for (int i = 0; i < 1080; i++)	/* Start to move over the Y axis */
     {
-      flag = 0;			/* Reset the flag for each i loop */
+      limit = 0;			/* Reset the limit for each i loop */
       for (int j = 0; j < 1920; j++)	/* Star to move over the X axis */
 	{
 	  if (ZBuffer[j][i] > -10000)	/* If a value in the ZBuffer is bigger than -10000 */
@@ -51,30 +51,28 @@ scanline (struct pixels ***Raster, double **ZBuffer, int r, int g, int b)
 		{
 		  if (ZBuffer[j + 1][i] == -10000)	/* Check if the next one is empty */
 		    {
-		      if (flag == 0)	/* Stablish the first limit */
+		      if (limit == 0)	/* Stablish the first limit */
 			{
 			  zb1 = ZBuffer[j][i];
-			  x1 = j;
-			  flag = 1;
+			  start = j;
+			  limit = 1;
 			}
-		      else if (flag == 1)	/* Stablish the second limit */
+		      else if (limit == 1)	/* Stablish the second limit */
 			{
 			  zb2 = ZBuffer[j][i];
-			  x2 = j;
-			  incZB = ((zb2 - zb1) / (x2 - x1));
-			  flag = 2;
-			  j = x1;
+			  end = j;
+			  incZB = ((zb2 - zb1) / (end - start));
+			  limit = 2;
+			  j = start;
 			}
-		      else if (flag == 2)	/* We've achieved the limit */
+		      else if (limit == 2)	/* We've achieved the limit */
 			{
 			  break;
-			  /*flag = 1;
-			     x1 = x2;  The firt limit is equal to the previous one */
 			}
 		    }
 		}
 	    }
-	  else if (flag == 2)	/* Fill the blank pixels */
+	  else if (limit == 2)	/* Fill the blank pixels */
 	    {
 	      if (zb1 >= Raster[j][i]->zBuffer)
 		{
