@@ -283,7 +283,7 @@ void
 mainBresenham (int n, struct face *faces, struct edge *edges,
 	       struct vertex *vertexes, struct pixels ***Raster, char *name)
 {
-  int i; 
+  int i;
   srand (clock ());
   double backface;
   double **ZBuffer = NULL;
@@ -293,11 +293,11 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
   finalRaster = createRaster ();
   for (i = 0; i < n; i++)
     {
-      rgb[0] = /*rand () % 255*/255;
-      rgb[1] = /*rand () % 255*/255;
-      rgb[2] = /*rand () % 255*/255 ;
+      rgb[0] = /*rand () % 255 */ 255;
+      rgb[1] = /*rand () % 255 */ 255;
+      rgb[2] = /*rand () % 255 */ 255;
       backface = faceHidding (faces[i], vertexes, edges);
-      if (backface >= 0 && backface <= 1)
+      if (backface >= 90 && backface <= 180)
 	{
 	  cleanZBuffer (&ZBuffer);
 	  cleanRaster (&Raster);
@@ -319,8 +319,8 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
 			 faces[i].edge3->vertex2->y,
 			 faces[i].edge3->vertex1->zb,
 			 faces[i].edge3->vertex2->zb, Raster, rgb, ZBuffer);
-	  scanline (Raster, ZBuffer, rand () % 255, rand () % 255, rand () % 255);
-	  //scanline (Raster, ZBuffer, rand () % 255, rand () % 255, rand () % 255);
+	  scanline (Raster, ZBuffer, rand () % 255, rand () % 255,
+		    rand () % 255);
 	  for (int i = 0; i < 1920; i++)
 	    {
 	      for (int j = 0; j < 1080; j++)
@@ -330,10 +330,10 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
 		      finalRaster[i][j]->rgb[0] = Raster[i][j]->rgb[0];
 		      finalRaster[i][j]->rgb[1] = Raster[i][j]->rgb[1];
 		      finalRaster[i][j]->rgb[2] = Raster[i][j]->rgb[2];
-		      finalRaster[i][j]->zBuffer = Raster[i][j]->zBuffer;
+		      finalRaster[i][j]->zBuffer = ZBuffer[i][j];
 		    }
 		}
-  }
+	    }
 	}
     }
   drawLine (finalRaster, 1920, 1080, name);
