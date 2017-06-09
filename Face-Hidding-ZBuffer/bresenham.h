@@ -44,8 +44,8 @@ struct face
 
 void threeDtotwoD (double alfa, double beta, double gamma, char *name);
 struct pixels ***createRaster ();
-void cleanRaster (struct pixels ***Raster);
-void cleanZBuffer (double **ZBuffer);
+void cleanRaster (struct pixels ****Raster);
+void cleanZBuffer (double ***ZBuffer);
 void translation (int n, struct vertex *vertexes, double cX, double cY,
 		  double cZ);
 void rotationX (struct vertex *vertexes, int n, double alfa);
