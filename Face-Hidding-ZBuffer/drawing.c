@@ -15,7 +15,7 @@ faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
   struct vertex C;
   double normalx = 0.0, normaly = 0.0, normalz = 0.0;
   double cosine;
-  A = vertexes[edges[f.edge1->num].vertex1->num]; // Define the 3 vectors
+  A = vertexes[edges[f.edge1->num].vertex1->num];	// Define the 3 vectors
   B = vertexes[edges[f.edge2->num].vertex1->num];
   C = vertexes[edges[f.edge3->num].vertex1->num];
   /* Calculate the normal vector */
@@ -27,12 +27,9 @@ faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
     ((normalz * -1) /
      sqrtl ((normalx * normalx) + (normaly * normaly) + (normalz * normalz)));
 //  printf ("COS: %lf\n", cosine);
-/* Also can calculate the angle, but it is not as efficient as just using the
-  cosine, and using the angle it's not very accurate.
   double angle = acos (cosine) * (180 / PI);
-  printf ("%lf\n", angle);
-  */
-  return cosine;
+  //printf ("%lf\n", angle);
+  return angle;
 }
 
 void
