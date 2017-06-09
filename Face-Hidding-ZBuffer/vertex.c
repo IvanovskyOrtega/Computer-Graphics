@@ -76,11 +76,12 @@ VLF (double alfa, double beta, double gamma, double sfX, double sfY,
   cZ = sumZ / n;
   printf ("cX:%lf cY:%lf cZ:%lf\n", cX, cY, cZ);
   fclose (raw);
-  translation (n, vertexes, cX, cY, cZ);
+  translation (vlc, vL, cX, cY, cZ);
   rotationX (vL, j, alfa);
   rotationY (vL, j, beta);
   rotationZ (vL, j, gamma);
   returnTranslation (vL, cX, cY, cZ, j);
+  translateAndProyect (vlc, vL, cX, cY, cZ);
   translation (n, vertexes, cX, cY, cZ);
   rotationX (vertexes, j, alfa);
   rotationY (vertexes, j, beta);
