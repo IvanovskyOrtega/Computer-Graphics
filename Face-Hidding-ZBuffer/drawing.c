@@ -7,6 +7,10 @@
 #include"vertex.h"
 #include"drawing.h"
 
+double diffuseLight[3];
+struct vertex L;
+double cosineTheta, magnitude, dotProduct;
+
 double
 faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
 {
@@ -33,10 +37,24 @@ faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
 }
 
 void
-scanline (struct pixels ***Raster, double **ZBuffer, int r, int g, int b)
+scanline (struct pixels ***Raster, double **ZBuffer, unsigned char *rgb,
+	  struct vertex normal)
 {
   int x1, x2, flag = 0;
   double zb1, zb2, incZB;
+  diffuseLight[0] = 200;
+  diffuseLight[1] = 500;
+  diffuseLight[2] = 100;
+  L.x = normal.x - diffuseLight[0];
+  L.y = normal.y - diffuseLight[1];
+  L.z = normal.z - diffuseLight[2];
+  dotProduct = (normal.x * L.x) + (normal.y * L.y) + (normal.z * L.z);
+  magnitude =
+    sqrt ((normal.x * normal.x) + (normal.y * normal.y) +
+	  (normal.z * normal.z)) * sqrt ((L.x * L.x) + (L.y * L.y) +
+					 (L.z * L.z));
+  cosineTheta = dotProduct / magnitude;
+  printf ("%lf\n", cosineTheta);
   for (int i = 0; i < 1080; i++)	/* Start to move over the Y axis */
     {
       flag = 0;			/* Reset the flag for each i loop */
@@ -71,11 +89,10 @@ scanline (struct pixels ***Raster, double **ZBuffer, int r, int g, int b)
 	    }
 	  else if (flag == 2)	/* Fill the blank pixels */
 	    {
-	      if (zb1 >= Raster[j][i]->zBuffer)
+	      if (zb1 > ZBuffer[j][i])
 		{
-		  Raster[j][i]->rgb[0] = r;
-		  Raster[j][i]->rgb[1] = g;
-		  Raster[j][i]->rgb[2] = b;
+		  /* Illumination hasn't been implemented. */
+		  putPixel (j, i, Raster, rgb, normal.z);
 		  zb1 += incZB;
 		  ZBuffer[j][i] = zb1;
 		  Raster[j][i]->zBuffer = zb1;
