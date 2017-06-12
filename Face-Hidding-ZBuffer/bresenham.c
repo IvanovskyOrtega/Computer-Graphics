@@ -279,48 +279,68 @@ cleanZBuffer (double ***ZBuffer)
     }
 }
 
+struct vertex getFaceNormal(struct face f, struct vertex *vertexes, struct edge *edges)
+{
+  struct vertex A;
+  struct vertex B;
+  struct vertex C;
+  struct vertex normal;
+  A = vertexes[edges[f.edge1->num].vertex1->num];	// Define the 3 vectors
+  B = vertexes[edges[f.edge2->num].vertex1->num];
+  C = vertexes[edges[f.edge3->num].vertex1->num];
+  /* Calculate the normal vector */
+  normal.x = (((B.y - A.y) * (C.z - B.z)) - ((B.z - A.z) * (C.y - B.y)));
+  normal.y = (((B.z - A.z) * (C.x - B.x)) - ((B.x - A.x) * (C.z - B.z)));
+  normal.z = (((B.x - A.x) * (C.y - B.y)) - ((B.y - A.y) * (C.x - B.x)));
+  return normal;
+}
+
 void
 mainBresenham (int n, struct face *faces, struct edge *edges,
 	       struct vertex *vertexes, struct pixels ***Raster, char *name)
 {
   int i;
   srand (clock ());
+  struct vertex faceNormal;
   double backface;
   double **ZBuffer = NULL;
   ZBuffer = createZBuffer ();
-  unsigned char rgb[3];
+  unsigned char rgb[3],rgb2[3];
   struct pixels ***finalRaster = NULL;
   finalRaster = createRaster ();
   for (i = 0; i < n; i++)
     {
-      rgb[0] = /*rand () % 255 */ 255;
-      rgb[1] = /*rand () % 255 */ 255;
-      rgb[2] = /*rand () % 255 */ 255;
+      rgb[0] = /*rand () % 255*/128;
+      rgb[1] = /*rand () % 255*/249;
+      rgb[2] = /*rand () % 255*/108;
+      rgb2[0] = rand () % 255;
+      rgb2[1] = rand () % 255;
+      rgb2[2] = rand () % 255;
       backface = faceHidding (faces[i], vertexes, edges);
-      if (backface >= 90 && backface <= 270)
+      if (backface >90 && backface <270)
 	{
 	  cleanZBuffer (&ZBuffer);
 	  cleanRaster (&Raster);
-	  drawBresenham (faces[i].edge1->vertex1->x,
-			 faces[i].edge1->vertex1->y,
-			 faces[i].edge1->vertex2->x,
-			 faces[i].edge1->vertex2->y,
+    faceNormal = getFaceNormal(faces[i],vertexes,edges);
+	  drawBresenham ((int)faces[i].edge1->vertex1->x,
+			 (int)faces[i].edge1->vertex1->y,
+			 (int)faces[i].edge1->vertex2->x,
+			 (int)faces[i].edge1->vertex2->y,
 			 faces[i].edge1->vertex1->zb,
-			 faces[i].edge1->vertex2->zb, Raster, rgb, ZBuffer);
-	  drawBresenham (faces[i].edge2->vertex1->x,
-			 faces[i].edge2->vertex1->y,
-			 faces[i].edge2->vertex2->x,
-			 faces[i].edge2->vertex2->y,
+			 faces[i].edge1->vertex2->zb, Raster, rgb, ZBuffer,faceNormal.z);
+	  drawBresenham ((int)faces[i].edge2->vertex1->x,
+			 (int)faces[i].edge2->vertex1->y,
+			 (int)faces[i].edge2->vertex2->x,
+			 (int)faces[i].edge2->vertex2->y,
 			 faces[i].edge2->vertex1->zb,
-			 faces[i].edge2->vertex2->zb, Raster, rgb, ZBuffer);
-	  drawBresenham (faces[i].edge3->vertex1->x,
-			 faces[i].edge3->vertex1->y,
-			 faces[i].edge3->vertex2->x,
-			 faces[i].edge3->vertex2->y,
+			 faces[i].edge2->vertex2->zb, Raster, rgb, ZBuffer,faceNormal.z);
+	  drawBresenham ((int)faces[i].edge3->vertex1->x,
+			 (int)faces[i].edge3->vertex1->y,
+			 (int)faces[i].edge3->vertex2->x,
+			 (int)faces[i].edge3->vertex2->y,
 			 faces[i].edge3->vertex1->zb,
-			 faces[i].edge3->vertex2->zb, Raster, rgb, ZBuffer);
-	  scanline (Raster, ZBuffer, rand () % 255, rand () % 255,
-		    rand () % 255);
+			 faces[i].edge3->vertex2->zb, Raster, rgb, ZBuffer,faceNormal.z);
+	  scanline (Raster, ZBuffer, rgb2, faceNormal);
 	  for (int i = 0; i < 1920; i++)
 	    {
 	      for (int j = 0; j < 1080; j++)
@@ -333,10 +353,10 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
 		      finalRaster[i][j]->zBuffer = ZBuffer[i][j];
 		    }
 		}
-	    }
+  }
 	}
     }
-  drawLine (finalRaster, 1920, 1080, name);
+  generateImage (finalRaster, 1920, 1080, name);
 }
 
 /*
@@ -358,7 +378,7 @@ void bezier(double a1, double a2, double b1, double b2, double c1, double c2, do
 void
 drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	       double zb2, struct pixels ***Raster, unsigned char *rgb,
-	       double **ZBuffer)
+	       double **ZBuffer, double normal)
 {
   if (x1 < x0)
     {
@@ -380,7 +400,7 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
   if (yEnd - yIni == 0)
     {
       fillSpecialCase1 (xIni, yIni, xEnd, yEnd, Raster,
-			rgb, zb1, zb2, ZBuffer);
+			rgb, zb1, zb2, ZBuffer, normal);
     }
   else if (xEnd - xIni == 0)
     {
@@ -394,7 +414,7 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	  zb2 = auxZB;
 	}
       fillSpecialCase2 (xIni, yIni, xEnd, yEnd, Raster,
-			rgb, zb1, zb2, ZBuffer);
+			rgb, zb1, zb2, ZBuffer, normal);
     }
   else
     {
@@ -403,7 +423,7 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
       if (evaluatedSlope == 1)
 	{
 	  fillSpecialCase3 (xIni, yIni, xEnd, yEnd,
-			    Raster, rgb, zb1, zb2, ZBuffer);
+			    Raster, rgb, zb1, zb2, ZBuffer, normal);
 	}
       else if (evaluatedSlope == 2)
 	{
@@ -415,7 +435,7 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	  yEnd = aux;
 	  fillRasterBresenham (xIni, yIni, xEnd, yEnd,
 			       Raster, evaluatedSlope, rgb, zb1, zb2,
-			       ZBuffer);
+			       ZBuffer, normal);
 	}
       else if (evaluatedSlope == 3)
 	{
@@ -427,7 +447,7 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	  zb2 = auxZB;
 	  fillRasterBresenham (xIni, yIni, xEnd, yEnd,
 			       Raster, evaluatedSlope, rgb, zb1, zb2,
-			       ZBuffer);
+			       ZBuffer, normal);
 	}
       else if (evaluatedSlope == 4)
 	{
@@ -441,18 +461,18 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	  zb2 = auxZB;
 	  fillRasterBresenham (xIni, yIni, xEnd, yEnd,
 			       Raster, evaluatedSlope, rgb, zb1, zb2,
-			       ZBuffer);
+			       ZBuffer, normal);
 	}
       else if (evaluatedSlope == 5)
 	{
 	  fillSpecialCase4 (xIni, yIni, xEnd, yEnd,
-			    Raster, rgb, zb1, zb2, ZBuffer);
+			    Raster, rgb, zb1, zb2, ZBuffer, normal);
 	}
       else
 	{
 	  fillRasterBresenham ((int) xIni, (int) yIni,
 			       (int) xEnd, (int) yEnd, Raster,
-			       evaluatedSlope, rgb, zb1, zb2, ZBuffer);
+			       evaluatedSlope, rgb, zb1, zb2, ZBuffer, normal);
 	}
     }
 }
@@ -475,9 +495,9 @@ evaluateSlope (double slope)
 }
 
 void
-fillSpecialCase1 (double x0, double y0, double x1, double y1,
+fillSpecialCase1 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
-		  double zb2, double **ZBuffer)
+		  double zb2, double **ZBuffer, double normal)
 {
   zbInc = (zb2 - zb1) / (x1 - x0);
   for (int i = x0; i <= x1; i++)
@@ -486,7 +506,7 @@ fillSpecialCase1 (double x0, double y0, double x1, double y1,
 	{
 	  if (ZBuffer[i][(int) y0] < zb1)
 	    {
-	      putPixel (i, y0, Raster, rgb);
+	      putPixel (i, y0, Raster, rgb,normal);
 	      ZBuffer[i][(int) y0] = zb1;
 	    }
 	}
@@ -495,9 +515,9 @@ fillSpecialCase1 (double x0, double y0, double x1, double y1,
 }
 
 void
-fillSpecialCase2 (double x0, double y0, double x1, double y1,
+fillSpecialCase2 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
-		  double zb2, double **ZBuffer)
+		  double zb2, double **ZBuffer, double normal)
 {
   zbInc = (zb2 - zb1) / (y1 - y0);
   for (int i = y0; i <= y1; i++)
@@ -506,7 +526,7 @@ fillSpecialCase2 (double x0, double y0, double x1, double y1,
 	{
 	  if (ZBuffer[(int) x0][i] < zb1)
 	    {
-	      putPixel (x0, i, Raster, rgb);
+	      putPixel (x0, i, Raster, rgb,normal);
 	      ZBuffer[(int) x0][i] = zb1;
 	    }
 	}
@@ -515,9 +535,9 @@ fillSpecialCase2 (double x0, double y0, double x1, double y1,
 }
 
 void
-fillSpecialCase3 (double x0, double y0, double x1, double y1,
+fillSpecialCase3 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
-		  double zb2, double **ZBuffer)
+		  double zb2, double **ZBuffer, double normal)
 {
   zbInc = (zb2 - zb1) / (x1 - x0);
   for (int i = x0; i <= x1; i++)
@@ -526,7 +546,7 @@ fillSpecialCase3 (double x0, double y0, double x1, double y1,
 	{
 	  if (ZBuffer[i][(int) y0] < zb1)
 	    {
-	      putPixel (i, y0, Raster, rgb);
+	      putPixel (i, y0, Raster, rgb,normal);
 	      ZBuffer[i][(int) y0] = zb1;
 	    }
 	}
@@ -536,9 +556,9 @@ fillSpecialCase3 (double x0, double y0, double x1, double y1,
 }
 
 void
-fillSpecialCase4 (double x0, double y0, double x1, double y1,
+fillSpecialCase4 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
-		  double zb2, double **ZBuffer)
+		  double zb2, double **ZBuffer, double normal)
 {
   zbInc = (zb2 - zb1) / (x1 - x0);
   for (int i = x0; i <= x1; i++)
@@ -547,7 +567,7 @@ fillSpecialCase4 (double x0, double y0, double x1, double y1,
 	{
 	  if (ZBuffer[i][(int) y0] < zb1)
 	    {
-	      putPixel (i, y0, Raster, rgb);
+	      putPixel (i, y0, Raster, rgb,normal);
 	      ZBuffer[i][(int) y0] = zb1;
 	    }
 	}
@@ -559,7 +579,7 @@ fillSpecialCase4 (double x0, double y0, double x1, double y1,
 void
 fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 		     int evaluatedSlope, unsigned char *rgb, double zb1,
-		     double zb2, double **ZBuffer)
+		     double zb2, double **ZBuffer, double normal)
 {
   int dx;
   int dy;
@@ -576,19 +596,19 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
       zbInc = (zb2 - zb1) / (x1 - x0);
       if (x0 >= 0 && x0 < 1920 && y0 >= 0 && y0 < 1080)
 	{
-	  if (ZBuffer[(int) x0][(int) y0] < zb1)
+	  if (ZBuffer[x0][y0] < zb1)
 	    {
-	      putPixel (x0, y0, Raster, rgb);
-	      ZBuffer[(int) x0][(int) y0] = zb1;
+	      putPixel (x0, y0, Raster, rgb,normal);
+	      ZBuffer[x0][y0] = zb1;
 	    }
 	}
       zb1 += zbInc;
       if (x1 >= 0 && x1 < 1920 && y1 >= 0 && y1 < 1080)
 	{
-	  if (ZBuffer[(int) x1][(int) y1] < zb2)
+	  if (ZBuffer[x1][y1] < zb2)
 	    {
-	      putPixel (x1, y1, Raster, rgb);
-	      ZBuffer[(int) x1][(int) y1] = zb2;
+	      putPixel (x1, y1, Raster, rgb,normal);
+	      ZBuffer[x1][y1] = zb2;
 	    }
 	}
       for (int i = x0 + 1; i < x1; i++)
@@ -604,10 +624,10 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	    }
 	  if (i >= 0 && i < 1920 && y0 >= 0 && y0 < 1080)
 	    {
-	      if (ZBuffer[i][(int) y0] < zb1)
+	      if (ZBuffer[i][y0] < zb1)
 		{
-		  putPixel (i, y0, Raster, rgb);
-		  ZBuffer[i][(int) y0] = zb1;
+		  putPixel (i, y0, Raster, rgb,normal);
+		  ZBuffer[i][y0] = zb1;
 		}
 	    }
 	  zb1 += zbInc;
@@ -618,19 +638,19 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
       zbInc = (zb2 - zb1) / (x1 - x0);
       if (y0 >= 0 && y0 < 1920 && x0 >= 0 && x0 < 1080)
 	{
-	  if (ZBuffer[(int) y0][(int) x0] < zb1)
+	  if (ZBuffer[y0][x0] < zb1)
 	    {
-	      putPixel (y0, x0, Raster, rgb);
-	      ZBuffer[(int) y0][(int) x0] = zb1;
+	      putPixel (y0, x0, Raster, rgb,normal);
+	      ZBuffer[y0][x0] = zb1;
 	    }
 	}
       zb1 += zbInc;
       if (y1 >= 0 && y1 < 1920 && x1 >= 0 && x1 < 1080)
 	{
-	  if (ZBuffer[(int) y1][(int) x1] < zb2)
+	  if (ZBuffer[y1][x1] < zb2)
 	    {
-	      putPixel (y1, x1, Raster, rgb);
-	      ZBuffer[(int) y1][(int) x1] = zb2;
+	      putPixel (y1, x1, Raster, rgb,normal);
+	      ZBuffer[y1][x1] = zb2;
 	    }
 	}
       for (int i = x0 + 1; i < x1; i++)
@@ -646,10 +666,10 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	    }
 	  if (y0 >= 0 && y0 < 1920 && i >= 0 && i < 1080)
 	    {
-	      if (ZBuffer[(int) y0][i] < zb1)
+	      if (ZBuffer[y0][i] < zb1)
 		{
-		  putPixel (y0, i, Raster, rgb);
-		  ZBuffer[(int) y0][i] = zb1;
+		  putPixel (y0, i, Raster, rgb,normal);
+		  ZBuffer[y0][i] = zb1;
 		}
 	    }
 	  zb1 += zbInc;
@@ -660,19 +680,19 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
       zbInc = (zb2 - zb1) / (x1 - x0);
       if (x0 >= 0 && x0 < 1920 && y1 >= 0 && y1 < 1080)
 	{
-	  if (ZBuffer[(int) x0][(int) y1] < zb1)
+	  if (ZBuffer[0][y1] < zb1)
 	    {
-	      putPixel (x0, y1, Raster, rgb);
-	      ZBuffer[(int) x0][(int) y1] = zb1;
+	      putPixel (x0, y1, Raster, rgb,normal);
+	      ZBuffer[x0][y1] = zb1;
 	    }
 	}
       zb1 += zbInc;
       if (x1 >= 0 && x1 < 1920 && y0 >= 0 && y0 < 1080)
 	{
-	  if (ZBuffer[(int) x1][(int) y0] < zb2)
+	  if (ZBuffer[x1][y0] < zb2)
 	    {
-	      putPixel (x1, y0, Raster, rgb);
-	      ZBuffer[(int) x1][(int) y0] = zb2;
+	      putPixel (x1, y0, Raster, rgb,normal);
+	      ZBuffer[x1][y0] = zb2;
 	    }
 	}
       for (int i = x0 + 1; i < x1; i++)
@@ -688,10 +708,10 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	    }
 	  if (i >= 0 && i < 1920 && y1 >= 0 && y1 < 1080)
 	    {
-	      if (ZBuffer[i][(int) y1] < zb1)
+	      if (ZBuffer[i][y1] < zb1)
 		{
-		  putPixel (i, y1, Raster, rgb);
-		  ZBuffer[i][(int) y1] = zb1;
+		  putPixel (i, y1, Raster, rgb,normal);
+		  ZBuffer[i][y1] = zb1;
 		}
 	    }
 	  zb1 += zbInc;
@@ -699,21 +719,22 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
     }
   else
     {
+      zbInc = (zb2 - zb1) / (x1 - x0);
       if (y0 >= 0 && y0 < 1920 && x1 >= 0 && x1 < 1080)
 	{
-	  if (ZBuffer[(int) y0][(int) x1] < zb1)
+	  if (ZBuffer[y0][x1] < zb1)
 	    {
-	      putPixel (y0, x1, Raster, rgb);
-	      ZBuffer[(int) y0][(int) x1] = zb1;
+	      putPixel (y0, x1, Raster, rgb,normal);
+	      ZBuffer[y0][x1] = zb1;
 	    }
 	}
       zb1 += zbInc;
       if (y1 >= 0 && y1 < 1920 && x0 >= 0 && x0 < 1080)
 	{
-	  if (ZBuffer[(int) y1][(int) x0] < zb2)
+	  if (ZBuffer[y1][x0] < zb2)
 	    {
-	      putPixel (y1, x0, Raster, rgb);
-	      ZBuffer[(int) y1][(int) x0] = zb2;
+	      putPixel (y1, x0, Raster, rgb,normal);
+	      ZBuffer[y1][x0] = zb2;
 	    }
 	}
       for (int i = (x1 - 1); i > x0; i--)
@@ -729,10 +750,10 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	    }
 	  if (y0 >= 0 && y0 < 1920 && i >= 0 && i < 1080)
 	    {
-	      if (ZBuffer[(int) y0][i] < zb1)
+	      if (ZBuffer[y0][i] < zb1)
 		{
-		  putPixel (y0, i, Raster, rgb);
-		  ZBuffer[(int) y0][i] = zb1;
+		  putPixel (y0, i, Raster, rgb,normal);
+		  ZBuffer[y0][i] = zb1;
 		}
 	    }
 	  zb1 += zbInc;
@@ -741,15 +762,16 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 }
 
 void
-putPixel (int x, int y, struct pixels ***Raster, unsigned char *rgb)
+putPixel (int x, int y, struct pixels ***Raster, unsigned char *rgb, double normal)
 {
   Raster[x][y]->rgb[0] = rgb[0];
   Raster[x][y]->rgb[1] = rgb[1];
   Raster[x][y]->rgb[2] = rgb[2];
+  Raster[x][y]->normal = normal; /* Will be used for illumination. */
 }
 
 void
-drawLine (struct pixels ***Raster, int width, int height, char *name)
+generateImage (struct pixels ***Raster, int width, int height, char *name)
 {
   FILE *line;
   char ppm[50] = { };
