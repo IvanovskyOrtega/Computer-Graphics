@@ -6,28 +6,14 @@
 #include "vertex.h"
 #include "drawing.h"
 
-/**
-  * Author: Ortega Victoriano Ivan
-  * Compilation instructions:
-  * Linux:
-  *   $ make                                #to compile
-  *   $ make run                            #to compile and run
-  * Windows:
-  *   > gcc -c vertex.c main.c -Wall        # to generate .object files
-  *   > gcc vertex.o main.o -o vlf.exe      # to generate the executable file
-  *   > vlf                                  # to run the program (also vlf.exe)
-
-  ./a.out alfa beta gamma scaleFactorX scaleFactorY translationX translationY name
-  */
-
-int j = 0;
-int m = 0;
-int fa = 0;
-int vlc = 0;
+int j = 0;			/* Main vertex list counter */
+int m = 0;			/* Edges list counter */
+int fa = 0;			/* Faces list counter */
+int vlc = 0;			/* Auxiliar vertex list counter */
 
 void
 VLF (double alfa, double beta, double gamma, double sfX, double sfY,
-     double tX, double tY, char *name)
+     double tX, double tY, char *name, char *rawFile)
 {
   srand (clock ());
   int n;
@@ -51,16 +37,16 @@ VLF (double alfa, double beta, double gamma, double sfX, double sfY,
   struct vertex *vL;
   struct edge *edges;		// Edges array
   struct face *faces;		// Faces array
-  n = readLines ();
+  n = readLines (rawFile);
   vL = (struct vertex *) malloc (n * sizeof (struct vertex));
   vertexes = (struct vertex *) malloc (n * sizeof (struct vertex));	// Allocate memory for the vertexes array
   edges = (struct edge *) malloc (n * sizeof (struct edge));	// Allocate memory for the edges array
   faces = (struct face *) malloc ((n / 3) * sizeof (struct face));	// Allocate memory for the faces array
-  vertexList (vL, n);
-  vertexList2 (vertexes, n);
-  edgesList (edges, vertexes, n);
-  facesList (&faces, vertexes, edges, n);
-  FILE *raw = fopen ("model.raw", "r");
+  vertexList (vertexes, n, rawFile);
+  vertexList2 (vL, n, rawFile);	/* The second list is needes to don't transform the vertexes to 2D */
+  edgesList (edges, vertexes, n, rawFile);
+  facesList (&faces, vertexes, edges, n, rawFile);
+  FILE *raw = fopen (rawFile, "r");
   for (int i = 0; i < n; i++)
     {
       fscanf (raw, "%lf %lf %lf ", &Point.x, &Point.y, &Point.z);
@@ -113,11 +99,11 @@ createZBuffer ()
 }
 
 int
-readLines ()
+readLines (char *rawFile)
 {
   char c;
   int n = 0;
-  FILE *raw = fopen ("model.raw", "r");	// File pointer to model.raw file
+  FILE *raw = fopen (rawFile, "r");	// File pointer to model.raw file
   while ((c = fgetc (raw)) != EOF)	// Loop to count number of lines in the raw file
     if (c == '\n')		// If theres a line break
       n += 3;			// n+=3, since there are 3 vertexes per line
@@ -126,13 +112,13 @@ readLines ()
 }
 
 void
-vertexList (struct vertex *vertexes, int n)
+vertexList (struct vertex *vertexes, int n, char *rawFile)
 {
   int i;			// Just a counter
   int k;			// Just a counter
   int exist = 0;		// Used for know if a vertex already exist in the vertexes array
   struct vertex aux;		// Auxiliar vertex
-  FILE *raw = fopen ("model.raw", "r");	// File pointer to model.raw file
+  FILE *raw = fopen (rawFile, "r");	// File pointer to model.raw file
   for (i = 0; i < n; i++)	// Loop to read the vertexes from the file
     {
       fscanf (raw, "%lf %lf %lf ", &aux.x, &aux.y, &aux.z);	// Scan data from the raw file
@@ -161,25 +147,25 @@ vertexList (struct vertex *vertexes, int n)
 	}
       exist = 0;		// Reset the exist value
     }
-    /*
-    Print the vertexes
-  for (i = 0; i < j; i++)
-    {
-      printf ("Vertex %d x %lf y %lf z %lf zb%lf\n", vertexes[i].num,
-	      vertexes[i].x, vertexes[i].y, vertexes[i].z, vertexes[i].zb);
-    }
-    */
+  /*
+     Print the vertexes
+     for (i = 0; i < j; i++)
+     {
+     printf ("Vertex %d x %lf y %lf z %lf zb%lf\n", vertexes[i].num,
+     vertexes[i].x, vertexes[i].y, vertexes[i].z, vertexes[i].zb);
+     }
+   */
   fclose (raw);
 }
 
 void
-vertexList2 (struct vertex *vertexes, int n)
+vertexList2 (struct vertex *vertexes, int n, char *rawFile)
 {
   int i;			// Just a counter
   int k;			// Just a counter
   int exist = 0;		// Used for know if a vertex already exist in the vertexes array
   struct vertex aux;		// Auxiliar vertex
-  FILE *raw = fopen ("model.raw", "r");	// File pointer to model.raw file
+  FILE *raw = fopen (rawFile, "r");	// File pointer to model.raw file
   for (i = 0; i < n; i++)	// Loop to read the vertexes from the file
     {
       fscanf (raw, "%lf %lf %lf ", &aux.x, &aux.y, &aux.z);	// Scan data from the raw file
@@ -208,19 +194,19 @@ vertexList2 (struct vertex *vertexes, int n)
 	}
       exist = 0;		// Reset the exist value
     }
-    /*
-    Print the vertexes
-  for (i = 0; i < vlc; i++)
-    {
-      printf ("Vertex %d x %lf y %lf z %lf zb%lf\n", vertexes[i].num,
-	      vertexes[i].x, vertexes[i].y, vertexes[i].z, vertexes[i].zb);
-    }
-    */
+  /*
+     Print the vertexes
+     for (i = 0; i < vlc; i++)
+     {
+     printf ("Vertex %d x %lf y %lf z %lf zb%lf\n", vertexes[i].num,
+     vertexes[i].x, vertexes[i].y, vertexes[i].z, vertexes[i].zb);
+     }
+   */
   fclose (raw);
 }
 
 void
-edgesList (struct edge *edges, struct vertex *vertexes, int n)
+edgesList (struct edge *edges, struct vertex *vertexes, int n, char *rawFile)
 {
   int i = 0;
   int x = 0;
@@ -234,7 +220,7 @@ edgesList (struct edge *edges, struct vertex *vertexes, int n)
   struct edge e1;
   struct edge e3;
   struct edge e2;
-  FILE *fp = fopen ("model.raw", "r");
+  FILE *fp = fopen (rawFile, "r");
   for (i = 0, k = 0; i < n; i += 3)
     {
       fscanf (fp, "%lf %lf %lf %lf %lf %lf %lf %lf %lf ", &v1.x, &v1.y, &v1.z,
@@ -291,10 +277,10 @@ edgesList (struct edge *edges, struct vertex *vertexes, int n)
       e3.vertex2 = a1;
       e3.hash = (e3.vertex1->hash) + (e3.vertex2->hash);
       /*
-      This part was designed to do not repeat edges which are already in the
-      list. But if we do this, it's more difficult to know in which direction
-      our line it's going to be draw.
-      for (int l = 0; l < i; l++)
+         This part was designed to do not repeat edges which are already in the
+         list. But if we do this, it's more difficult to know in which direction
+         our line it's going to be draw.
+         for (int l = 0; l < i; l++)
          {
          if (e1.hash == edges[l].hash)
          {
@@ -338,7 +324,7 @@ edgesList (struct edge *edges, struct vertex *vertexes, int n)
          }
          if (exist1 == 0)
          {
-         */
+       */
       edges[k].num = k;
       edges[k].vertex1 = e1.vertex1;
       edges[k].vertex2 = e1.vertex2;
@@ -346,10 +332,10 @@ edgesList (struct edge *edges, struct vertex *vertexes, int n)
       k++;
       m++;
       /*
-				   }
-				   if (exist2 == 0)
-				   {
-           */
+         }
+         if (exist2 == 0)
+         {
+       */
       edges[k].num = k;
       edges[k].vertex1 = e2.vertex1;
       edges[k].vertex2 = e2.vertex2;
@@ -357,10 +343,10 @@ edgesList (struct edge *edges, struct vertex *vertexes, int n)
       k++;
       m++;
       /*
-				   }
-				   if (exist3 == 0)
-				   {
-           */
+         }
+         if (exist3 == 0)
+         {
+       */
       edges[k].num = k;
       edges[k].vertex1 = e3.vertex1;
       edges[k].vertex2 = e3.vertex2;
@@ -381,7 +367,7 @@ for (i = 0; i < m; i++)
 
 void
 facesList (struct face **faces, struct vertex *vertexes, struct edge *edges,
-	   int n)
+	   int n, char *rawFile)
 {
   int i;			// Just a counter
   int k;			// Just a counter
@@ -397,7 +383,7 @@ facesList (struct face **faces, struct vertex *vertexes, struct edge *edges,
   struct edge *ae1;		// Auxiliar edge
   struct edge *ae2;		// Auxiliar edge
   struct edge *ae3;		// Auxiliar edge
-  FILE *raw = fopen ("model.raw", "r");	// File pointer to model.raw file
+  FILE *raw = fopen (rawFile, "r");	// File pointer to model.raw file
   for (i = 0; i < (n / 3); i++)	// vertex1 to generate the Faces List
     {
       fscanf (raw, "%lf %lf %lf %lf %lf %lf %lf %lf %lf ", &aux1.x, &aux1.y, &aux1.z, &aux2.x, &aux2.y, &aux2.z, &aux3.x, &aux3.y, &aux3.z);	//Read all the line
@@ -516,14 +502,14 @@ facesList (struct face **faces, struct vertex *vertexes, struct edge *edges,
       (*faces)[fa].edge3 = ae3;
       fa++;
     }
-    /*
-    Print faces list
-  for (i = 0; i < fa; i++)
-    {
-      printf ("Face %d Edge %d Edge %d Edge %d\n", (*faces)[i].num,
-	      (*faces)[i].edge1->num, (*faces)[i].edge2->num,
-	      (*faces)[i].edge3->num);
-    }
-    */
+  /*
+     Print faces list
+     for (i = 0; i < fa; i++)
+     {
+     printf ("Face %d Edge %d Edge %d Edge %d\n", (*faces)[i].num,
+     (*faces)[i].edge1->num, (*faces)[i].edge2->num,
+     (*faces)[i].edge3->num);
+     }
+   */
   fclose (raw);
 }
