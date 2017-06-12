@@ -9,6 +9,8 @@
   * Author: Ortega Victoriano Ivan
   * Subject: Computer Graphics
   * Group: 3CM6
+  * Check my CG Github reppository:
+  * https://github.com/IvanovskyOrtega/Computer-Graphics
   * Compilation instructions:
   * Linux:
   *   $ make      #to compile
