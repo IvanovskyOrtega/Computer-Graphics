@@ -11,6 +11,9 @@ double diffuseLight[3];
 struct vertex L;
 double cosineTheta, magnitude, dotProduct;
 
+/*
+  This function determines if a face is gonna be drawn or not.
+*/
 double
 faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
 {
@@ -36,6 +39,9 @@ faceHidding (struct face f, struct vertex *vertexes, struct edge *edges)
   return angle;
 }
 
+/*
+  This fucntion fills the emply pixels of a face.
+*/
 void
 scanline (struct pixels ***Raster, double **ZBuffer, unsigned char *rgb,
 	  struct vertex normal)
