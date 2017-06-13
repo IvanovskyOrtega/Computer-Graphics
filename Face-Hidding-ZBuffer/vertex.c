@@ -11,6 +11,12 @@ int m = 0;			/* Edges list counter */
 int fa = 0;			/* Faces list counter */
 int vlc = 0;			/* Auxiliar vertex list counter */
 
+/*
+  This function performs almost everything in the program (calling
+  other function of the other libraries). Gets the vertex list, 
+  edges list, faces list. Calls the transformation functions in
+  bresenham.h
+*/
 void
 VLF (double alfa, double beta, double gamma, double sfX, double sfY,
      double tX, double tY, char *name, char *rawFile)
@@ -83,6 +89,10 @@ VLF (double alfa, double beta, double gamma, double sfX, double sfY,
   //Raster = NULL;
 }
 
+/*
+  This function creates the ZBuffer matrix initialized with
+  bigger negative values (-10000 in this case).
+*/
 double **
 createZBuffer ()
 {
@@ -98,6 +108,9 @@ createZBuffer ()
   return ZBuffer;
 }
 
+/*
+  This function read how many lines does the raw file have.
+*/
 int
 readLines (char *rawFile)
 {
@@ -111,6 +124,9 @@ readLines (char *rawFile)
   return n;
 }
 
+/*
+  This function gets the vertex list using the raw file.
+*/
 void
 vertexList (struct vertex *vertexes, int n, char *rawFile)
 {
@@ -158,6 +174,9 @@ vertexList (struct vertex *vertexes, int n, char *rawFile)
   fclose (raw);
 }
 
+/*
+  This function gets the auxiliar vertex list using the raw file.
+*/
 void
 vertexList2 (struct vertex *vertexes, int n, char *rawFile)
 {
@@ -205,6 +224,9 @@ vertexList2 (struct vertex *vertexes, int n, char *rawFile)
   fclose (raw);
 }
 
+/*
+  This function gets the edges list using the raw file.
+*/
 void
 edgesList (struct edge *edges, struct vertex *vertexes, int n, char *rawFile)
 {
@@ -365,6 +387,9 @@ for (i = 0; i < m; i++)
   */
 }
 
+/*
+  This function gets the faces list using the raw file.
+*/
 void
 facesList (struct face **faces, struct vertex *vertexes, struct edge *edges,
 	   int n, char *rawFile)
