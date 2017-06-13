@@ -54,7 +54,7 @@ scanline (struct pixels ***Raster, double **ZBuffer, unsigned char *rgb,
 	  (normal.z * normal.z)) * sqrt ((L.x * L.x) + (L.y * L.y) +
 					 (L.z * L.z));
   cosineTheta = dotProduct / magnitude;
-  printf ("%lf\n", cosineTheta);
+  //printf ("%lf\n", cosineTheta);
   for (int i = 0; i < 1080; i++)	/* Start to move over the Y axis */
     {
       flag = 0;			/* Reset the flag for each i loop */
