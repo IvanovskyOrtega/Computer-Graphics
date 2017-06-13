@@ -7,12 +7,16 @@
 #include"vertex.h"
 #include"drawing.h"
 
-static const double f = 200;
-double xIni, yIni, xEnd, yEnd;
-double slope = 0;
-double aux, auxZB, zbInc;
-int evaluatedSlope;
+static const double f = 200; /* focal distance for perpective projection */
+double xIni, yIni, xEnd, yEnd;	/* Variables for Bresenham */
+double slope = 0;	/* Slope */
+double aux, auxZB, zbInc;	/* Some auxiliar variables */
+int evaluatedSlope;	/* Evaluated slope value */
 
+/* 
+  This function translate the 3D object to a convenient position to perform
+  rotations using the center of the object.
+*/
 void
 translation (int n, struct vertex *vertexes, double cX, double cY, double cZ)
 {
@@ -25,6 +29,10 @@ translation (int n, struct vertex *vertexes, double cX, double cY, double cZ)
   applyMatrix (vertexes, n, matrix);
 }
 
+/*
+  This function translate and project the 3D vertexes according to the focal
+  distance.
+*/
 void
 translateAndProyect (int n, struct vertex *vertexes, double cX, double cY,
 		     double cZ)
@@ -37,6 +45,9 @@ translateAndProyect (int n, struct vertex *vertexes, double cX, double cY,
   applyMatrix (vertexes, n, matrix);
 }
 
+/*
+  This function performs a 3D rotation over the X axis
+*/
 void
 rotationX (struct vertex *vertexes, int n, double alfa)
 {
@@ -50,6 +61,9 @@ rotationX (struct vertex *vertexes, int n, double alfa)
   applyMatrix (vertexes, n, matrix);
 }
 
+/*
+  This function performs a 3D rotation over the Y axis
+*/
 void
 rotationY (struct vertex *vertexes, int n, double beta)
 {
@@ -63,6 +77,9 @@ rotationY (struct vertex *vertexes, int n, double beta)
   applyMatrix (vertexes, n, matrix);
 }
 
+/*
+  This function performs a 3D rotation over the Z axis
+*/
 void
 rotationZ (struct vertex *vertexes, int n, double gamma)
 {
@@ -76,6 +93,10 @@ rotationZ (struct vertex *vertexes, int n, double gamma)
   applyMatrix (vertexes, n, matrix);
 }
 
+/*
+  This function return the 3D object to its original position after being
+  moved to a convenient position to perform rotations.
+*/
 void
 returnTranslation (struct vertex *vertexes, double cX, double cY, double cZ,
 		   int n)
@@ -88,6 +109,10 @@ returnTranslation (struct vertex *vertexes, double cX, double cY, double cZ,
   applyMatrixRT (vertexes, n, matrix);
 }
 
+/*
+  This function return the translation after performing rotations
+  applying the matrix.
+*/
 void
 applyMatrixRT (struct vertex *vertexes, int n, double matrix[4][4])
 {
@@ -142,6 +167,10 @@ applyMatrixRT (struct vertex *vertexes, int n, double matrix[4][4])
     }
 }
 
+/*
+  This function apply the matrix to perform rotations, translations
+  (to manipulate the 3D model).
+*/
 void
 applyMatrix (struct vertex *vertexes, int n, double matrix[4][4])
 {
@@ -200,6 +229,9 @@ applyMatrix (struct vertex *vertexes, int n, double matrix[4][4])
     }
 }
 
+/*
+  This function transform the 3D vertexes into 2D
+*/
 void
 transform3D (int n, struct vertex *vertexes)
 {
@@ -213,6 +245,10 @@ transform3D (int n, struct vertex *vertexes)
 
 }
 
+/*
+  This function scale and translate the 2D vertexes according to the 
+  received parameters
+*/
 void
 scaleAndTranslate (int n, struct vertex *vertexes, double cX, double cY,
 		   double cZ, double sfX, double sfY, double tX, double tY)
@@ -230,6 +266,10 @@ scaleAndTranslate (int n, struct vertex *vertexes, double cX, double cY,
   //printf("point in the 3D form(%lf,%lf,%lf)\n",Points[i].x,Points[i].y,Points[i].z);
 }
 
+/*
+  This function creates a Raster with a black background (rgb(0,0,0))
+  And also uses Z Buffer to know if a pixel is gonna be replaced by other one
+*/
 struct pixels ***
 createRaster ()
 {
@@ -251,6 +291,9 @@ createRaster ()
   return Raster;
 }
 
+/*
+  This function cleans the Raster if something was drawn on it.
+*/
 void
 cleanRaster (struct pixels ****Raster)
 {
@@ -266,6 +309,9 @@ cleanRaster (struct pixels ****Raster)
     }
 }
 
+/*
+  This function clean the ZBuffer matrix
+*/
 void
 cleanZBuffer (double ***ZBuffer)
 {
@@ -279,6 +325,9 @@ cleanZBuffer (double ***ZBuffer)
     }
 }
 
+/*
+  This function calculates the normal of a face.
+*/
 struct vertex
 getFaceNormal (struct face f, struct vertex *vertexes, struct edge *edges)
 {
@@ -296,6 +345,11 @@ getFaceNormal (struct face f, struct vertex *vertexes, struct edge *edges)
   return normal;
 }
 
+/*
+  This function send the received paramters to another function used for
+  draw the lines of each face, also implements the faceHidding function and
+  scanline.
+*/
 void
 mainBresenham (int n, struct face *faces, struct edge *edges,
 	       struct vertex *vertexes, struct pixels ***Raster, char *name)
@@ -308,7 +362,7 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
   ZBuffer = createZBuffer ();
   unsigned char rgb[3], rgb2[3];
   struct pixels ***finalRaster = NULL;
-  finalRaster = createRaster ();
+  finalRaster = createRaster (); /* Final raster which is gonna be drawn */
   for (i = 0; i < n; i++)
     {
       rgb[0] = /*rand () % 255 */ 128;
@@ -364,21 +418,10 @@ mainBresenham (int n, struct face *faces, struct edge *edges,
 }
 
 /*
-void bezier(double a1, double a2, double b1, double b2, double c1, double c2, double d1, double d2, n )
-{
-  double t;
-  for (t = 0.0; t < 1.0; t += 0.0005)
-    {
-	double xt = pow (1-t, 3) * x[0] + 3 * t * pow (1-t, 2) * x[1] +
-		    3 * pow (t, 2) * (1-t) * x[2] + pow (t, 3) * x[3];
-
-	double yt = pow (1-t, 3) * y[0] + 3 * t * pow (1-t, 2) * y[1] +
-		    3 * pow (t, 2) * (1-t) * y[2] + pow (t, 3) * y[3];
-
-	putpixel (xt, yt, WHITE);
-    }
-}*/
-
+  This function decides how the line is gonna be drawn, according
+  to its calculated slope, some of the draw functions are special
+  cases for Bresenham.
+*/
 void
 drawBresenham (double x0, double y0, double x1, double y1, double zb1,
 	       double zb2, struct pixels ***Raster, unsigned char *rgb,
@@ -482,6 +525,9 @@ drawBresenham (double x0, double y0, double x1, double y1, double zb1,
     }
 }
 
+/*
+  This function evaluates the slope of a line.
+*/
 int
 evaluateSlope (double slope)
 {
@@ -499,6 +545,10 @@ evaluateSlope (double slope)
     return 0;
 }
 
+/*
+  This function draw the line in the raster, it's the special case when
+  we have a horizontal line.
+*/
 void
 fillSpecialCase1 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
@@ -519,6 +569,10 @@ fillSpecialCase1 (int x0, int y0, int x1, int y1,
     }
 }
 
+/*
+  This function draw the line in the raster, it's the special case when
+  we have a vertical line.
+*/
 void
 fillSpecialCase2 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
@@ -539,6 +593,10 @@ fillSpecialCase2 (int x0, int y0, int x1, int y1,
     }
 }
 
+/*
+  This function draw the line in the raster, it's the special case when
+  we have a positive 45 degrees line.
+*/
 void
 fillSpecialCase3 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
@@ -560,6 +618,10 @@ fillSpecialCase3 (int x0, int y0, int x1, int y1,
     }
 }
 
+/*
+  This function draw the line in the raster, it's the special case when
+  we have a negative 45 degrees line.
+*/
 void
 fillSpecialCase4 (int x0, int y0, int x1, int y1,
 		  struct pixels ***Raster, unsigned char *rgb, double zb1,
@@ -581,6 +643,10 @@ fillSpecialCase4 (int x0, int y0, int x1, int y1,
     }
 }
 
+/*
+  This function draw the line accoirding to the evaluated slope, uses the
+  main Bresenham algorithm.
+*/
 void
 fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
 		     int evaluatedSlope, unsigned char *rgb, double zb1,
@@ -766,6 +832,9 @@ fillRasterBresenham (int x0, int y0, int x1, int y1, struct pixels ***Raster,
     }
 }
 
+/*
+  This function put a pixel in the Raster
+*/
 void
 putPixel (int x, int y, struct pixels ***Raster, unsigned char *rgb,
 	  double normal)
@@ -776,6 +845,9 @@ putPixel (int x, int y, struct pixels ***Raster, unsigned char *rgb,
   Raster[x][y]->normal = normal;	/* Will be used for illumination. */
 }
 
+/*
+  This function create the final image, using the final Raster.
+*/
 void
 generateImage (struct pixels ***Raster, int width, int height, char *name)
 {
