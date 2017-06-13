@@ -31,7 +31,7 @@ main (int argc, char *argv[])
       double sfY = atof (argv[5]);
       double tX = atof (argv[6]);
       double tY = atof (argv[7]);
-      VLF (alfa, beta, gamma, sfX, sfY, tX, tY, argv[8], argv[9]);	//Functions and methods in bresenham.c
+      VLF (alfa, beta, gamma, sfX, sfY, tX, tY, argv[8], argv[9]);	
       return 0;
     }
   else
