@@ -4,6 +4,6 @@
 int 
 main(void)
 {
-	void generateFlag();
+	generateFlag();
 	return 0;
 }
