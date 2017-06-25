@@ -55,6 +55,6 @@ int main(int argc, char *argv[])
 		    ("inputName\t: The raw file name  (Add the extension Ej.: eva.raw )\n");
 		printf("An example could be:\n");
 		printf
-		    ("./a.out -0.5 0.1 0.2 1200 1200 1200 960 540 0 myppm getintherobotshinji.raw\n");
+		    ("./a.out -0.5 0.1 0.2 1200 1200 1200 960 540 0 memengelionPPM getintherobotshinji.raw\n");
 	}
 }
