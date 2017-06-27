@@ -67,15 +67,15 @@ VLF(double alfa, double beta, double gamma, double sfX, double sfY, double sfZ,
 	cZ = sumZ / n;
 	printf("cX:%lf cY:%lf cZ:%lf\n", cX, cY, cZ);
 	fclose(raw);
-  /* Apply needed transformations for the auxiliar vertexes array */
-  translation(vlc, vL, cX, cY, cZ);
+	/* Apply needed transformations for the auxiliar vertexes array */
+	translation(vlc, vL, cX, cY, cZ);
 	rotationX(vL, vlc, alfa);
 	rotationY(vL, vlc, beta);
 	rotationZ(vL, vlc, gamma);
 	returnTranslation(vL, cX, cY, cZ, vlc);
 	scale(vlc, vL, sfX, sfY, sfZ);
 	translate(vlc, vL, tX, tY, tZ);
-  /* Apply all the transformations for the main vertees array */
+	/* Apply all the transformations for the main vertees array */
 	translation(j, vertexes, cX, cY, cZ);
 	rotationX(vertexes, j, alfa);
 	rotationY(vertexes, j, beta);
