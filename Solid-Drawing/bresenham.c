@@ -20,8 +20,11 @@ int evaluatedSlope;		/* Evaluated slope value */
 void
 translation(int n, struct vertex *vertexes, double cX, double cY, double cZ)
 {
-	for(int i=0;i<n;i++)
-		printf("BeforeT vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("BeforeT vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 	double matrix[4][4] = {
 		{1, 0, 0, -cX},
 		{0, 1, 0, -cY},
@@ -29,8 +32,10 @@ translation(int n, struct vertex *vertexes, double cX, double cY, double cZ)
 		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-		printf("AfterT vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf("AfterT vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		       i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		       vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -42,14 +47,17 @@ translateAndProyect(int n, struct vertex *vertexes, double cX, double cY,
 		    double cZ)
 {
 	double matrix[4][4] = {
-	{    1,         0,         0,                  -cX  },
-	{    0,         1,         0,                  -cY  },
-	{    0,         0,         1,         (3 * f) - cZ  },
-	{    0,         0,     1 / f, (((3 * f) - cZ)) / f  }
+		{1, 0, 0, -cX},
+		{0, 1, 0, -cY},
+		{0, 0, 1, (3 * f) - cZ},
+		{0, 0, 1 / f, (((3 * f) - cZ)) / f}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("Projected vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("Projected vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -60,14 +68,17 @@ void rotationX(struct vertex *vertexes, int n, double alfa)
 	double cx = cos(alfa * M_PI);
 	double sx = sin(alfa * M_PI);
 	double matrix[4][4] = {
-	{1, 0, 0, 0},
-	{0, cx, -sx, 0},
-	{0, sx, cx, 0},
-	{0, 0, 0, 1}
+		{1, 0, 0, 0},
+		{0, cx, -sx, 0},
+		{0, sx, cx, 0},
+		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("RotatedX vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("RotatedX vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -78,14 +89,17 @@ void rotationY(struct vertex *vertexes, int n, double beta)
 	double cy = cos(beta * M_PI);
 	double sy = sin(beta * M_PI);
 	double matrix[4][4] = {
-	{cy, 0, sy, 0},
-	{0, 1, 0, 0},
-	{-sy, 0, cy, 0},
-	{0, 0, 0, 1}
+		{cy, 0, sy, 0},
+		{0, 1, 0, 0},
+		{-sy, 0, cy, 0},
+		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("RotatedY vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("RotatedY vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -101,8 +115,11 @@ void rotationZ(struct vertex *vertexes, int n, double gamma)
 	{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("RotatedZ vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("RotatedZ vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -114,14 +131,17 @@ returnTranslation(struct vertex *vertexes, double cX, double cY, double cZ,
 		  int n)
 {
 	double matrix[4][4] = {
-	{1, 0, 0, cX},
-	{0, 1, 0, cY},
-	{0, 0, 1, cZ},
-	{0, 0, 0,  1}
+		{1, 0, 0, cX},
+		{0, 1, 0, cY},
+		{0, 0, 1, cZ},
+		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("Returned vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("Returned vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -197,36 +217,39 @@ void transform3D(int n, struct vertex *vertexes)
   This function scales the 3D-homogeneous vertexes according to the
   received parameters
 */
-void
-scale(int n, struct vertex *vertexes, double sfX, double sfY, double sfZ)
+void scale(int n, struct vertex *vertexes, double sfX, double sfY, double sfZ)
 {
 	double matrix[4][4] = {
-	{sfX,   0,   0, 0},
-	{  0, sfY,   0, 0},
-	{  0,   0,   1, 0},
-	{  0,   0,   0, 1}
+		{sfX, 0, 0, 0},
+		{0, sfY, 0, 0},
+		{0, 0, sfZ, 0},
+		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("Scaled vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf("Scaled vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		       i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		       vertexes[i].zb, vertexes[i].w);
 }
 
 /*
   This function translates the 3D-homogeneous vertexes according to the
   received parameters
 */
-void
-translate(int n, struct vertex *vertexes, double tX, double tY, double tZ)
+void translate(int n, struct vertex *vertexes, double tX, double tY, double tZ)
 {
 	double matrix[4][4] = {
-	{  1,   0,   0, tX  },
-	{  0,   1,   0, tY  },
-	{  0,   0,   1, tZ  },
-	{  0,   0,   0,  1  }
+		{1, 0, 0, tX},
+		{0, 1, 0, tY},
+		{0, 0, 1, tZ},
+		{0, 0, 0, 1}
 	};
 	applyMatrix(vertexes, n, matrix);
-	for(int i=0;i<n;i++)
-	  printf("Traslated vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",i,vertexes[i].x,vertexes[i].y,vertexes[i].z,vertexes[i].zb,vertexes[i].w);
+	for (int i = 0; i < n; i++)
+		printf
+		    ("Traslated vertex[%d]\t(\t%lf\t,%lf\t,%lf\t,%lf\t,%lf\t)\n",
+		     i, vertexes[i].x, vertexes[i].y, vertexes[i].z,
+		     vertexes[i].zb, vertexes[i].w);
 }
 
 /*
@@ -292,9 +315,9 @@ getFaceNormal(struct face f, struct vertex *vertexes, struct edge *edges)
 	A = vertexes[edges[f.edge1->num].vertex1->num];	// Define the 3 vectors
 	B = vertexes[edges[f.edge2->num].vertex1->num];
 	C = vertexes[edges[f.edge3->num].vertex1->num];
-  printf("az: %f\n",A.z);
-  printf("bz: %f\n",B.z);
-  printf("cz: %f\n",C.z);
+	printf("az: %f\n", A.z);
+	printf("bz: %f\n", B.z);
+	printf("cz: %f\n", C.z);
 	/* Calculate the normal vector */
 	normal.x = (((B.y - A.y) * (C.z - B.z)) - ((B.z - A.z) * (C.y - B.y)));
 	normal.y = (((B.z - A.z) * (C.x - B.x)) - ((B.x - A.x) * (C.z - B.z)));
@@ -312,7 +335,7 @@ struct equation getPlaneEquation(struct vertex vertex1, struct vertex normal)
 	    planeEquation.a * vertex1.x + planeEquation.b * vertex1.y +
 	    planeEquation.c * vertex1.z;
 	/*printf("z = -(%lf)x -(%lf)y -(%lf) / (%lf)\n", planeEquation.a,
-	       planeEquation.b, planeEquation.d, planeEquation.c);*/
+	   planeEquation.b, planeEquation.d, planeEquation.c); */
 	return planeEquation;
 }
 
@@ -347,31 +370,40 @@ mainBresenham(int n, struct face *faces, struct edge *edges,
 			cleanZBuffer(&ZBuffer);
 			cleanRaster(&Raster);
 			faceNormal = getFaceNormal(faces[i], vertexes, edges);
-			planeEquation =
-			    getPlaneEquation(vertexes
-					     [edges
-					      [faces[i].edge1->num].vertex1->
-					      num], faceNormal);
+			/*planeEquation =
+			   getPlaneEquation(vertexes
+			   [edges
+			   [faces[i].edge1->num].
+			   vertex1->num], faceNormal); */
+			printf("line 1\n");
 			drawBresenham((int)faces[i].edge1->vertex1->x,
 				      (int)faces[i].edge1->vertex1->y,
 				      (int)faces[i].edge1->vertex2->x,
 				      (int)faces[i].edge1->vertex2->y,
-				      faces[i].edge1->vertex1->zb,
-				      faces[i].edge1->vertex2->zb, Raster, rgb,
+				      vertexes[edges[faces[i].edge1->num].
+					       vertex1->num].zb,
+				      vertexes[edges[faces[i].edge1->num].
+					       vertex2->num].zb, Raster, rgb,
 				      ZBuffer, faceNormal.z, planeEquation);
+			printf("line 2\n");
 			drawBresenham((int)faces[i].edge2->vertex1->x,
 				      (int)faces[i].edge2->vertex1->y,
 				      (int)faces[i].edge2->vertex2->x,
 				      (int)faces[i].edge2->vertex2->y,
-				      faces[i].edge2->vertex1->zb,
-				      faces[i].edge2->vertex2->zb, Raster, rgb,
+				      vertexes[edges[faces[i].edge2->num].
+					       vertex1->num].zb,
+				      vertexes[edges[faces[i].edge2->num].
+					       vertex2->num].zb, Raster, rgb,
 				      ZBuffer, faceNormal.z, planeEquation);
+			printf("line 3\n");
 			drawBresenham((int)faces[i].edge3->vertex1->x,
 				      (int)faces[i].edge3->vertex1->y,
 				      (int)faces[i].edge3->vertex2->x,
 				      (int)faces[i].edge3->vertex2->y,
-				      faces[i].edge3->vertex1->zb,
-				      faces[i].edge3->vertex2->zb, Raster, rgb,
+				      vertexes[edges[faces[i].edge3->num].
+					       vertex1->num].zb,
+				      vertexes[edges[faces[i].edge3->num].
+					       vertex2->num].zb, Raster, rgb,
 				      ZBuffer, faceNormal.z, planeEquation);
 			scanline(Raster, ZBuffer, rgb2, faceNormal,
 				 planeEquation);
@@ -427,9 +459,6 @@ drawBresenham(double x0, double y0, double x1, double y1, double zb1,
 			aux = yIni;
 			yIni = yEnd;
 			yEnd = aux;
-			auxZB = zb1;
-			zb1 = zb2;
-			zb2 = auxZB;
 		}
 		fillSpecialCase2(xIni, yIni, xEnd, yEnd, Raster,
 				 rgb, zb1, zb2, ZBuffer, normal, planeEquation);
@@ -497,19 +526,22 @@ fillSpecialCase1(int x0, int y0, int x1, int y1,
 		 double zb2, double **ZBuffer, double normal,
 		 struct equation planeEquation)
 {
-	//zbInc = (zb2 - zb1) / (x1 - x0);
+	zbInc = (zb2 - zb1) / (x1 - x0);
+	printf("Drawing from P1(%d,%d,%lf) to P2(%d,%d,%lf)\n", x0, y0, zb1, x1,
+	       y1, zb2);
 	for (int i = x0; i <= x1; i++) {
 		if (i >= 0 && i < 1920 && y0 >= 0 && y0 < 1080) {
-			zbuff =
-			    (-(planeEquation.a * (double)i) -
-			     (planeEquation.b * (double)y0) -
-			     planeEquation.d) / planeEquation.c;
-			if (ZBuffer[i][y0] < zbuff) {
+			/*zbuff =
+			   (-(planeEquation.a * (double)i) -
+			   (planeEquation.b * (double)y0) -
+			   planeEquation.d) / planeEquation.c; */
+			printf("zb interpolation: %lf\n", zb1);
+			if (ZBuffer[i][y0] < zb1) {
 				putPixel(i, y0, Raster, rgb, normal);
-				ZBuffer[i][y0] = zbuff;
+				ZBuffer[i][y0] = zb1;
 			}
 		}
-		//zb1 += zbInc;
+		zb1 += zbInc;
 	}
 }
 
@@ -523,19 +555,22 @@ fillSpecialCase2(int x0, int y0, int x1, int y1,
 		 double zb2, double **ZBuffer, double normal,
 		 struct equation planeEquation)
 {
-	//zbInc = (zb2 - zb1) / (y1 - y0);
+	zbInc = (zb2 - zb1) / (y1 - y0);
+	printf("Drawing from P1(%d,%d,%lf) to P2(%d,%d,%lf)\n", x0, y0, zb1, x1,
+	       y1, zb2);
 	for (int i = y0; i <= y1; i++) {
 		if (x0 >= 0 && x0 < 1920 && i >= 0 && i < 1080) {
-			zbuff =
-			    (-(planeEquation.a * (double)x0) -
-			     (planeEquation.b * (double)i) -
-			     planeEquation.d) / planeEquation.c;
-			if (ZBuffer[x0][i] < zbuff) {
+			/*zbuff =
+			   (-(planeEquation.a * (double)x0) -
+			   (planeEquation.b * (double)i) -
+			   planeEquation.d) / planeEquation.c; */
+			printf("zb interpolation: %lf\n", zb1);
+			if (ZBuffer[x0][i] < zb1) {
 				putPixel(x0, i, Raster, rgb, normal);
-				ZBuffer[x0][i] = zbuff;
+				ZBuffer[x0][i] = zb1;
 			}
 		}
-		//zb1 += zbInc;
+		zb1 += zbInc;
 	}
 }
 
@@ -549,20 +584,23 @@ fillSpecialCase3(int x0, int y0, int x1, int y1,
 		 double zb2, double **ZBuffer, double normal,
 		 struct equation planeEquation)
 {
-	//zbInc = (zb2 - zb1) / (x1 - x0);
+	zbInc = (zb2 - zb1) / (x1 - x0);
+	printf("Drawing from P1(%d,%d,%lf) to P2(%d,%d,%lf)\n", x0, y0, zb1, x1,
+	       y1, zb2);
 	for (int i = x0; i <= x1; i++) {
 		if (i >= 0 && i < 1920 && y0 >= 0 && y0 < 1080) {
-			zbuff =
-			    (-(planeEquation.a * (double)i) -
-			     (planeEquation.b * (double)y0) -
-			     planeEquation.d) / planeEquation.c;
-			if (ZBuffer[i][y0] < zbuff) {
+			/*zbuff =
+			   (-(planeEquation.a * (double)i) -
+			   (planeEquation.b * (double)y0) -
+			   planeEquation.d) / planeEquation.c; */
+			printf("zb interpolation: %lf\n", zb1);
+			if (ZBuffer[i][y0] < zb1) {
 				putPixel(i, y0, Raster, rgb, normal);
-				ZBuffer[i][y0] = zbuff;
+				ZBuffer[i][y0] = zb1;
 			}
 		}
 		y0++;
-		//zb1 += zbInc;
+		zb1 += zbInc;
 	}
 }
 
@@ -576,19 +614,22 @@ fillSpecialCase4(int x0, int y0, int x1, int y1,
 		 double zb2, double **ZBuffer, double normal,
 		 struct equation planeEquation)
 {
-	//zbInc = (zb2 - zb1) / (x1 - x0);
+	zbInc = (zb2 - zb1) / (x1 - x0);
+	printf("Drawing from P1(%d,%d,%lf) to P2(%d,%d,%lf)\n", x0, y0, zb1, x1,
+	       y1, zb2);
 	for (int i = x0; i <= x1; i++) {
 		if (i >= 0 && i < 1920 && y0 >= 0 && y0 < 1080) {
-			zbuff =
-			    (-(planeEquation.a * (double)i) -
-			     (planeEquation.b * (double)y0) -
-			     planeEquation.d) / planeEquation.c;
-			if (ZBuffer[i][y0] < zbuff) {
+			/*zbuff =
+			   (-(planeEquation.a * (double)i) -
+			   (planeEquation.b * (double)y0) -
+			   planeEquation.d) / planeEquation.c; */
+			printf("zb interpolation: %lf\n", zb1);
+			if (ZBuffer[i][y0] < zb1) {
 				putPixel(i, y0, Raster, rgb, normal);
-				ZBuffer[i][y0] = zbuff;
+				ZBuffer[i][y0] = zb1;
 			}
 		}
-		//zb1 += zbInc;
+		zb1 += zbInc;
 		y0--;
 	}
 }
@@ -606,6 +647,10 @@ fillRasterBresenham(int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	int dx;
 	int dy;
 	int stepX, stepY;
+	double dZb = (zb2 - zb1);
+	printf("Drawing from P1(%d,%d,%lf) to P2(%d,%d,%lf)\n", x0, y0, zb1, x1,
+	       y1, zb2);
+	printf("zb1: %lf\tzb2: %lf\n", zb1, zb2);
 	dx = x1 - x0;
 	dy = y1 - y0;
 	if (dy < 0) {
@@ -616,61 +661,66 @@ fillRasterBresenham(int x0, int y0, int x1, int y1, struct pixels ***Raster,
 	if (dx < 0) {
 		dx = -dx;
 		stepX = -1;
-	} else
+	} else {
 		stepX = 1;
+	}
 	dx <<= 1;
 	dy <<= 1;
+	printf("stepX: %d\tstepY: %d\n", stepX, stepY);
+	printf("zb interpolation: %lf\n", zb1);
 	if (x0 >= 0 && x0 < 1920 && y0 >= 0 && y0 < 1080) {
-		zbuff =
-		    (-(planeEquation.a * (double)x0) -
-		     (planeEquation.b * (double)y0) -
-		     planeEquation.d) / planeEquation.c;
-		if (ZBuffer[x0][y0] < zbuff) {
+		/*zbuff =
+		   (-(planeEquation.a * (double)x0) -
+		   (planeEquation.b * (double)y0) -
+		   planeEquation.d) / planeEquation.c; */
+		if (ZBuffer[x0][y0] < zb1) {
 			putPixel(x0, y0, Raster, rgb, normal);
-			ZBuffer[x0][y0] = zbuff;
+			ZBuffer[x0][y0] = zb1;
 		}
 	}
 	if (dx > dy) {
 		int fraction = dy - (dx >> 1);
-		//double zbInc = (zb2 - zb1)/(x1 - x0);
+		zbInc = dZb / abs(x1 - x0);
 		while (x0 != x1) {
-			//zb1 = zb1 + zbInc;
+			zb1 = zb1 + zbInc;
 			x0 += stepX;
 			if (fraction >= 0) {
 				y0 += stepY;
 				fraction -= dx;
 			}
 			fraction += dy;
+			printf("zb interpolation: %lf\n", zb1);
 			if (x0 >= 0 && x0 < 1920 && y0 >= 0 && y0 < 1080) {
-				zbuff =
-				    (-(planeEquation.a * (double)x0) -
-				     (planeEquation.b * (double)y0) -
-				     planeEquation.d) / planeEquation.c;
-				if (ZBuffer[x0][y0] < zbuff) {
+				/*zbuff =
+				   (-(planeEquation.a * (double)x0) -
+				   (planeEquation.b * (double)y0) -
+				   planeEquation.d) / planeEquation.c; */
+				if (ZBuffer[x0][y0] < zb1) {
 					putPixel(x0, y0, Raster, rgb, normal);
-					ZBuffer[x0][y0] = zbuff;
+					ZBuffer[x0][y0] = zb1;
 				}
 			}
 		}
 	} else {
 		int fraction = dx - (dy >> 1);
-		//double zbInc = (zb2 - zb1)/(y1 - y0);
+		zbInc = dZb / abs(y1 - y0);
 		while (y0 != y1) {
-			//zb1 = zb1 + zbInc;
+			zb1 = zb1 + zbInc;
 			if (fraction >= 0) {
 				x0 += stepX;
 				fraction -= dy;
 			}
 			y0 += stepY;
 			fraction += dx;
+			printf("zb interpolation: %lf\n", zb1);
 			if (x0 >= 0 && x0 < 1920 && y0 >= 0 && y0 < 1080) {
-				zbuff =
-				    (-(planeEquation.a * x0) -
-				     (planeEquation.b * y0) -
-				     planeEquation.d) / planeEquation.c;
-				if (ZBuffer[x0][y0] < zbuff) {
+				/*zbuff =
+				   (-(planeEquation.a * x0) -
+				   (planeEquation.b * y0) -
+				   planeEquation.d) / planeEquation.c; */
+				if (ZBuffer[x0][y0] < zb1) {
 					putPixel(x0, y0, Raster, rgb, normal);
-					ZBuffer[x0][y0] = zbuff;
+					ZBuffer[x0][y0] = zb1;
 				}
 			}
 		}
