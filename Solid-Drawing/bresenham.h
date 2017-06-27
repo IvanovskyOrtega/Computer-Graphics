@@ -63,10 +63,8 @@ returnTranslation(struct vertex *vertexes, double cX, double cY, double cZ,
 void applyMatrix(struct vertex *vertexes, int n, double matrix[4][4]);
 void applyMatrixRT(struct vertex *vertexes, int n, double matrix[4][4]);
 void transform3D(int n, struct vertex *vertexes);
-void
-scale(int n, struct vertex *vertexes, double sfX, double sfY, double sfZ);
-void
-translate(int n, struct vertex *vertexes, double tX, double tY, double tZ);
+void scale(int n, struct vertex *vertexes, double sfX, double sfY, double sfZ);
+void translate(int n, struct vertex *vertexes, double tX, double tY, double tZ);
 void mainBresenham(int n, struct face *faces, struct edge *edges,
 		   struct vertex *vertexes, struct pixels ***Raster,
 		   char *name);
