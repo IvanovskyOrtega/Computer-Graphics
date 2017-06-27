@@ -320,7 +320,7 @@ getFaceNormal(struct face f, struct vertex *vertexes, struct edge *edges)
 	printf("cz: %f\n", C.z);
 	/* Calculate the normal vector */
 	normal.x = (((B.y - A.y) * (C.z - B.z)) - ((B.z - A.z) * (C.y - B.y)));
-	normal.y = (((B.z - A.z) * (C.x - B.x)) - ((B.x - A.x) * (C.z - B.z)));
+	normal.y = (((B.x - A.x) * (C.z - B.z)) - ((B.z - A.z) * (C.x - B.x)));
 	normal.z = (((B.x - A.x) * (C.y - B.y)) - ((B.y - A.y) * (C.x - B.x)));
 	return normal;
 }
