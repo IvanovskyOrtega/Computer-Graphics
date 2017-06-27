@@ -72,13 +72,15 @@ scanline(struct pixels ***Raster, double **ZBuffer, unsigned char *rgb,
 				if (j < 1919) {
 					if (ZBuffer[j + 1][i] == -10000) {	/* Check if the next one is empty */
 						if (flag == 0) {	/* Stablish the first limit */
-							//zb1 = ZBuffer[j][i];
+							zb1 = ZBuffer[j][i];
 							x1 = j;
 							flag = 1;
 						} else if (flag == 1) {	/* Stablish the second limit */
-							//zb2 = ZBuffer[j][i];
+							zb2 = ZBuffer[j][i];
 							x2 = j;
-							//incZB = ((zb2 - zb1) / (x2 - x1));
+							incZB =
+							    ((zb2 - zb1) / (x2 -
+									    x1));
 							flag = 2;
 							j = x1;
 						} else if (flag == 2) {	/* We've achieved the limit */
@@ -87,16 +89,16 @@ scanline(struct pixels ***Raster, double **ZBuffer, unsigned char *rgb,
 					}
 				}
 			} else if (flag == 2) {	/* Fill the blank pixels */
-				zbuff =
-				    (-(planeEquation.a * j) -
-				     (planeEquation.b * i) -
-				     planeEquation.d) / planeEquation.c;
-				if (zbuff > ZBuffer[j][i]) {
+				/*zbuff =
+				   (-(planeEquation.a * j) -
+				   (planeEquation.b * i) -
+				   planeEquation.d) / planeEquation.c; */
+				if (zb1 > ZBuffer[j][i]) {
 					/* Illumination hasn't been implemented. */
 					putPixel(j, i, Raster, rgb, normal.z);
-					//zb1 += incZB;
-					ZBuffer[j][i] = zbuff;
-					Raster[j][i]->zBuffer = zbuff;
+					zb1 += incZB;
+					ZBuffer[j][i] = zb1;
+					Raster[j][i]->zBuffer = zb1;
 				}
 			}
 		}
