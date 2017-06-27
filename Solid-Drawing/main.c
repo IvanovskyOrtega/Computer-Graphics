@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
 		double tX = atof(argv[7]);
 		double tY = atof(argv[8]);
 		double tZ = atof(argv[9]);
-		VLF(alfa, beta, gamma, sfX, sfY, sfZ, tX, tY, tZ, argv[10], argv[11]);
+		VLF(alfa, beta, gamma, sfX, sfY, sfZ, tX, tY, tZ, argv[10],
+		    argv[11]);
 		return 0;
 	} else {
 		printf("Arguments are not enough :C\n");
