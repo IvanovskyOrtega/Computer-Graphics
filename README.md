@@ -19,4 +19,6 @@
 
 ## Here is a video that I made with a lot of pictures generated with the face hiding + z-buffer program
 - Longinus sword 
+
 [![Loginus sword video](http://img.youtube.com/vi/tNhZUlagvjA/0.jpg)](https://youtu.be/tNhZUlagvjA)
+[Click here or in the image](https://youtu.be/tNhZUlagvjA)
